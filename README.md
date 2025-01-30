@@ -17,7 +17,7 @@ var baseUrl = "http://localhost/vam/v1" // Substitute yoru services URL
 var apiKey  = "foobar"                   // Substitute your services API KEY
 
 
-// Kiota API
+// -- Kiota API
 var vampireSquid = VampireSquidFactory.create(baseUrl, apiKey)
 
 // Use the service! Some examples.
@@ -26,7 +26,7 @@ List<String> cameraIds = vampireSquid.v1()
                 .cameras()
                 .get();
 
-// MediaService API
+// -- MediaService API
 var mediaService = new VampireSquidKiotaClient(URI.create(baseUrl), apiKey);
 List<String> cameraIds = mediaService.findAllCameraIds();
 ```

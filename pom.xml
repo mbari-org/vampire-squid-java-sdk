@@ -5,11 +5,31 @@
 
   <groupId>org.mbari.vars</groupId>
   <artifactId>vampire-squid-java-sdk</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Java SDK for the vampire-squid microservice</description>
   <url>https://github.com/mbari-org/vampire-squid-java-sdk</url>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Brian Schlining</name>
+      <email>brian@mbari.org</email>
+      <organization>MBARI</organization>
+      <organizationUrl>https://www.mbari.org</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git@github.com:mbari-org/vampire-squid-java-sdk.git</connection>
+    <developerConnection>scm:git:ssh://github.com:mbari-org/vampire-squid-java-sdk.git</developerConnection>
+    <url>https://github.com/mbari-org/annosaurus-java-sdk/tree/main</url>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
