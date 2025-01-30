@@ -39,7 +39,7 @@ public class AuthRequestBuilder extends BaseRequestBuilder {
         super(requestAdapter, "{+baseurl}/v1/auth", rawUrl);
     }
     /**
-     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY <key>`
+     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY &lt;key&gt;`
      * @return a {@link Authorization}
      * @throws BadRequest When receiving a 400 status code
      * @throws Unauthorized When receiving a 401 status code
@@ -51,7 +51,7 @@ public class AuthRequestBuilder extends BaseRequestBuilder {
         return post(null);
     }
     /**
-     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY <key>`
+     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY &lt;key&gt;`
      * @param requestConfiguration Configuration for the request such as headers, query parameters, and middleware options.
      * @return a {@link Authorization}
      * @throws BadRequest When receiving a 400 status code
@@ -70,7 +70,7 @@ public class AuthRequestBuilder extends BaseRequestBuilder {
         return this.requestAdapter.send(requestInfo, errorMapping, Authorization::createFromDiscriminatorValue);
     }
     /**
-     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY <key>`
+     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY &lt;key&gt;`
      * @return a {@link RequestInformation}
      */
     @jakarta.annotation.Nonnull
@@ -78,7 +78,7 @@ public class AuthRequestBuilder extends BaseRequestBuilder {
         return toPostRequestInformation(null);
     }
     /**
-     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY <key>`
+     * Exchange an API key for a JWT. Header format is `Authorization: APIKEY &lt;key&gt;`
      * @param requestConfiguration Configuration for the request such as headers, query parameters, and middleware options.
      * @return a {@link RequestInformation}
      */
