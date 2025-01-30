@@ -1,0 +1,2380 @@
+openapi: 3.0.0
+info:
+  title: vampire-squid
+  version: 1.0.8
+paths:
+  /v1/auth:
+    post:
+      tags:
+      - auth
+      description: 'Exchange an API key for a JWT. Header format is `Authorization:
+        APIKEY <key>`'
+      operationId: authenticate
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Header format is `Authorization: APIKEY <key>`'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authorization'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/health:
+    get:
+      tags:
+      - health
+      description: Health check
+      operationId: health
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/camera/{cameraId}/{startTimestamp}/{endTimestamp}:
+    get:
+      tags:
+      - media
+      description: Find media by cameraId and timestamps
+      operationId: findMediaByCameraIdAndTimestamps
+      parameters:
+      - name: cameraId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: startTimestamp
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: endTimestamp
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/camera/{cameraId}/{datetime}:
+    get:
+      tags:
+      - media
+      description: Find media by cameraId and datetime
+      operationId: findMediaByCameraIdAndDatetime
+      parameters:
+      - name: cameraId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: datetime
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/concurrent/{videoReferenceUuid}:
+    get:
+      tags:
+      - media
+      description: Find concurrent media by videoReferenceUuid
+      operationId: findConcurrentMediaByVideoReferenceUuid
+      parameters:
+      - name: videoReferenceUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/move/{videoReferenceUuid}:
+    put:
+      tags:
+      - media
+      description: Move an existing media by videoReferenceUuid and form data
+      operationId: moveMediaByVideoReferenceUuid
+      parameters:
+      - name: videoReferenceUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MoveVideoParams'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/media/sha512/{sha512}:
+    get:
+      tags:
+      - media
+      description: Find media by sha512
+      operationId: findMediaBySha512
+      parameters:
+      - name: sha512
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/uri/{uri}:
+    get:
+      tags:
+      - media
+      description: Find media by uri
+      operationId: findMediaByUri
+      parameters:
+      - name: uri
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/videoreference/filename/{filename}:
+    get:
+      tags:
+      - media
+      description: Find media by filename
+      operationId: findMediaByFileName
+      parameters:
+      - name: filename
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/videoreference/{videoReferenceUuid}:
+    get:
+      tags:
+      - media
+      description: Find media by videoReferenceUuid
+      operationId: findMediaByVideoReferenceUuid
+      parameters:
+      - name: videoReferenceUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/videosequence/{name}:
+    get:
+      tags:
+      - media
+      description: Find media by video sequence name
+      operationId: findMediaByVideoSequenceName
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/video/{name}:
+    get:
+      tags:
+      - media
+      description: Find media by video name
+      operationId: findMediaByVideoName
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/media/{videoReferenceUuid}:
+    put:
+      tags:
+      - media
+      description: Update an existing media by videoReferenceUuid and form data
+      operationId: updateMediaByVideoReferenceUuid
+      parameters:
+      - name: videoReferenceUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Media'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Media'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/media:
+    put:
+      tags:
+      - media
+      description: Update an existing media. (All uuid params will be ignored if present.)
+      operationId: updateMedia
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Media'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Media'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+    post:
+      tags:
+      - media
+      description: Create a new media.(The `uuid` param will be ignored if present.)
+      operationId: createMedia
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Media'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Media'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/videosequences/camera/{cameraid}/{timestamp}:
+    get:
+      tags:
+      - video sequences
+      description: Find video sequences by camera id and timestamp
+      operationId: findVideoSequencesByCameraIdAndTimestamp
+      parameters:
+      - name: cameraid
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: timestamp
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoSequence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/camera/{cameraid}:
+    get:
+      tags:
+      - video sequences
+      description: Find video sequences by camera id
+      operationId: findVideoSequencesByCameraId
+      parameters:
+      - name: cameraid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoSequence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/cameras:
+    get:
+      tags:
+      - video sequences
+      description: Find all camera ids
+      operationId: findAllCameraIds
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/lastupdate/{uuid}:
+    get:
+      tags:
+      - video sequences
+      description: Find last update for a video sequence
+      operationId: findLastUpdateForVideoSequence
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastUpdatedTime'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/names/camera/{cameraid}:
+    get:
+      tags:
+      - video sequences
+      description: Find video sequences by camera id
+      operationId: findVideoSequenceNamesByCameraId
+      parameters:
+      - name: cameraid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/name/{name}:
+    get:
+      tags:
+      - video sequences
+      description: Find video sequences by name
+      operationId: findVideoSequenceByName
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoSequence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/names:
+    get:
+      tags:
+      - video sequences
+      description: Find all video sequence names
+      operationId: findAllVideoSequenceNames
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videosequences:
+    get:
+      tags:
+      - video sequences
+      description: Find all video sequences
+      operationId: findAllVideoSequences
+      parameters:
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoSequence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    post:
+      tags:
+      - video sequences
+      description: Create a video sequence
+      operationId: createOneVideoSequence
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoSequenceCreate'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoSequenceCreate'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoSequence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/videosequences/{uuid}:
+    put:
+      tags:
+      - video sequences
+      description: Update a video sequence
+      operationId: updateOneVideoSequence
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoSequenceUpdate'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoSequenceUpdate'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoSequence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+    delete:
+      tags:
+      - video sequences
+      description: Delete a video sequence by UUID
+      operationId: deleteOneVideoSequence
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/videos/videosequence/name/{videoSequenceName}:
+    get:
+      tags:
+      - videos
+      description: Find videos by its video sequence name
+      operationId: findVideoByVideoSequenceByName
+      parameters:
+      - name: videoSequenceName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/videosequence/{videoSequenceUuid}:
+    get:
+      tags:
+      - videos
+      description: Find a videos by its video sequence UUID
+      operationId: findVideoByVideoSequenceUuid
+      parameters:
+      - name: videoSequenceUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/videoreference/{videoReferenceUuid}:
+    get:
+      tags:
+      - videos
+      description: Find a videos by its video reference UUID
+      operationId: findVideoByVideoReferenceUuid
+      parameters:
+      - name: videoReferenceUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/lastupdate/{uuid}:
+    get:
+      tags:
+      - videos
+      description: Find the last update time for a video by UUID
+      operationId: findLastUpdateForVideo
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastUpdatedTime'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/name/{name}:
+    get:
+      tags:
+      - videos
+      description: Find a videos by its name
+      operationId: findVideoByName
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/names/videosequence/{videoSequenceName}:
+    get:
+      tags:
+      - videos
+      description: Find video names by its video sequence name
+      operationId: findVideoNamesByVideoSequenceName
+      parameters:
+      - name: videoSequenceName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/timestamp/{start}/{end}:
+    get:
+      tags:
+      - videos
+      description: Find videos by its timestamp range
+      operationId: findVideoByTimestampRange
+      parameters:
+      - name: start
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos/timestamp/{timestamp}:
+    get:
+      tags:
+      - videos
+      description: Find videos by its timestamp
+      operationId: findVideoByTimestamp
+      parameters:
+      - name: timestamp
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videos:
+    get:
+      tags:
+      - videos
+      description: Find all videos
+      operationId: findAllVideos
+      parameters:
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    post:
+      tags:
+      - videos
+      description: 'Create a video. Required form fields: name, video_sequence_uuid,
+        start_timestamp (or start), duration_millis. Optional fields: description'
+      operationId: createOneVideo
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/videos/{uuid}:
+    get:
+      tags:
+      - videos
+      description: Find a video by UUID
+      operationId: findOneVideo
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    put:
+      tags:
+      - videos
+      description: 'Update a video by UUID. Updateable fields: name, video_sequence_uuid,
+        start_timestamp (or start), duration_millis, description'
+      operationId: updateVideo
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+    delete:
+      tags:
+      - videos
+      description: Delete a video by UUID
+      operationId: deleteVideoByUuid
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/videoreferences/lastupdate/{uuid}:
+    get:
+      tags:
+      - video references
+      description: Find the last update time for a video reference by UUID
+      operationId: findLastUpdateForVideoReference
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LastUpdatedTime'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videoreferences/uri/{uri}:
+    get:
+      tags:
+      - video references
+      description: Find a video reference by URI
+      operationId: findVideoReferenceByUri
+      parameters:
+      - name: uri
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoReference'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videoreferences/uris:
+    get:
+      tags:
+      - video references
+      description: Find video references by URIs
+      operationId: findAllUris
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videoreferences/sha512/{sha512}:
+    get:
+      tags:
+      - video references
+      description: Find a video reference by SHA512
+      operationId: findVideoReferenceBySha512
+      parameters:
+      - name: sha512
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoReference'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /v1/videoreferences/{uuid}:
+    get:
+      tags:
+      - video references
+      description: Find a video reference by UUID
+      operationId: findOneVideoReference
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoReference'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    put:
+      tags:
+      - video references
+      description: Update a video reference by UUID
+      operationId: update
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoReferenceUpdate'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoReferenceUpdate'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoReference'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+    delete:
+      tags:
+      - video references
+      description: Delete a video reference by UUID
+      operationId: deleteOneVideoReference
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+  /v1/videoreferences:
+    get:
+      tags:
+      - video references
+      description: Find all video references
+      operationId: findAllVideoReferences
+      parameters:
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoReference'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    post:
+      tags:
+      - video references
+      description: Create a video reference
+      operationId: createOneVideoReference
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoReferenceCreate'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoReferenceCreate'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoReference'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+      security:
+      - {}
+      - httpAuth: []
+components:
+  schemas:
+    Authorization:
+      title: Authorization
+      type: object
+      required:
+      - token_type
+      - access_token
+      properties:
+        token_type:
+          type: string
+        access_token:
+          type: string
+    BadRequest:
+      title: BadRequest
+      type: object
+      required:
+      - message
+      - responseCode
+      properties:
+        message:
+          type: string
+        responseCode:
+          type: integer
+          format: int32
+    HealthStatus:
+      title: HealthStatus
+      type: object
+      required:
+      - jdkVersion
+      - availableProcessors
+      - freeMemory
+      - maxMemory
+      - totalMemory
+      - application
+      - version
+      - description
+      properties:
+        jdkVersion:
+          type: string
+        availableProcessors:
+          type: integer
+          format: int32
+        freeMemory:
+          type: integer
+          format: int64
+        maxMemory:
+          type: integer
+          format: int64
+        totalMemory:
+          type: integer
+          format: int64
+        application:
+          type: string
+        version:
+          type: string
+        description:
+          type: string
+    LastUpdatedTime:
+      title: LastUpdatedTime
+      type: object
+      required:
+      - timestamp
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+    Media:
+      title: Media
+      type: object
+      required:
+      - uri
+      properties:
+        video_sequence_uuid:
+          type: string
+          format: uuid
+        video_uuid:
+          type: string
+          format: uuid
+        video_reference_uuid:
+          type: string
+          format: uuid
+        video_sequence_name:
+          type: string
+        camera_id:
+          type: string
+        video_name:
+          type: string
+        uri:
+          type: string
+        start_timestamp:
+          type: string
+          format: date-time
+        duration_millis:
+          type: integer
+          format: int64
+        container:
+          type: string
+        video_codec:
+          type: string
+        audio_codec:
+          type: string
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        frame_rate:
+          type: number
+          format: double
+        size_bytes:
+          type: integer
+          format: int64
+        description:
+          type: string
+        video_sequence_description:
+          type: string
+        video_description:
+          type: string
+        sha512:
+          type: string
+          format: binary
+    MoveVideoParams:
+      title: MoveVideoParams
+      type: object
+      required:
+      - video_name
+      - start_timestamp
+      - duration_millis
+      properties:
+        video_name:
+          type: string
+        start_timestamp:
+          type: string
+          format: date-time
+        duration_millis:
+          type: integer
+          format: int64
+    NotFound:
+      title: NotFound
+      type: object
+      required:
+      - message
+      - responseCode
+      properties:
+        message:
+          type: string
+        responseCode:
+          type: integer
+          format: int32
+    ServerError:
+      title: ServerError
+      type: object
+      required:
+      - message
+      - responseCode
+      properties:
+        message:
+          type: string
+        responseCode:
+          type: integer
+          format: int32
+    Unauthorized:
+      title: Unauthorized
+      type: object
+      required:
+      - message
+      - responseCode
+      properties:
+        message:
+          type: string
+        responseCode:
+          type: integer
+          format: int32
+    Video:
+      title: Video
+      type: object
+      required:
+      - uuid
+      - name
+      - start_timestamp
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        start_timestamp:
+          type: string
+          format: date-time
+        duration_millis:
+          type: integer
+          format: int64
+        description:
+          type: string
+        last_updated_time:
+          type: string
+          format: date-time
+        video_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoReference'
+    VideoReference:
+      title: VideoReference
+      type: object
+      required:
+      - uuid
+      - uri
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        uri:
+          type: string
+        container:
+          type: string
+        video_codec:
+          type: string
+        audio_codec:
+          type: string
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        frame_rate:
+          type: number
+          format: double
+        size_bytes:
+          type: integer
+          format: int64
+        sha512:
+          type: string
+          format: binary
+        description:
+          type: string
+        last_updated_time:
+          type: string
+          format: date-time
+    VideoReferenceCreate:
+      title: VideoReferenceCreate
+      type: object
+      required:
+      - video_uuid
+      - uri
+      properties:
+        video_uuid:
+          type: string
+          format: uuid
+        uri:
+          type: string
+        container:
+          type: string
+        video_codec:
+          type: string
+        audio_codec:
+          type: string
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        frame_rate:
+          type: number
+          format: double
+        size_bytes:
+          type: integer
+          format: int64
+        sha512:
+          type: string
+          format: binary
+        description:
+          type: string
+    VideoReferenceUpdate:
+      title: VideoReferenceUpdate
+      type: object
+      required:
+      - uri
+      properties:
+        video_uuid:
+          type: string
+          format: uuid
+        uri:
+          type: string
+        container:
+          type: string
+        video_codec:
+          type: string
+        audio_codec:
+          type: string
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        frame_rate:
+          type: number
+          format: double
+        size_bytes:
+          type: integer
+          format: int64
+        sha512:
+          type: string
+          format: binary
+        description:
+          type: string
+    VideoSequence:
+      title: VideoSequence
+      type: object
+      required:
+      - uuid
+      - name
+      - camera_id
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        camera_id:
+          type: string
+        description:
+          type: string
+        last_updated_time:
+          type: string
+          format: date-time
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+    VideoSequenceCreate:
+      title: VideoSequenceCreate
+      type: object
+      required:
+      - name
+      - camera_id
+      properties:
+        name:
+          type: string
+        camera_id:
+          type: string
+        description:
+          type: string
+    VideoSequenceUpdate:
+      title: VideoSequenceUpdate
+      type: object
+      properties:
+        name:
+          type: string
+        camera_id:
+          type: string
+        description:
+          type: string
+  securitySchemes:
+    httpAuth:
+      type: http
+      scheme: bearer
