@@ -276,6 +276,9 @@ public class Media {
 
     public static Media fromKiota(org.mbari.vars.vampiresquid.sdk.kiota.models.Media kMedia) {
         var media = new Media();
+        media.setVideoReferenceUuid(kMedia.getVideoReferenceUuid());
+        media.setVideoUuid(kMedia.getVideoUuid());
+        media.setVideoSequenceUuid(kMedia.getVideoSequenceUuid());
         media.setCameraId(kMedia.getCameraId());
         media.setContainer(kMedia.getContainer());
         media.setDescription(kMedia.getDescription());
