@@ -36,9 +36,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>21</maven.compiler.release>
 
-    <auth0.version>4.4.0</auth0.version>
-    <kiota.version>1.8.0</kiota.version>
-    <methanol.version>1.8.1</methanol.version>
+    <auth0.version>4.5.0</auth0.version>
+    <kiota.version>1.8.4</kiota.version>
+    <methanol.version>1.8.2</methanol.version>
     <okhttp3.version>4.12.0</okhttp3.version>
   </properties>
 
@@ -47,7 +47,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.11.0</version>
+        <version>5.12.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -203,6 +203,10 @@
           <version>3.2.7</version>
         </plugin>
         <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>3.5.2</version> 
+        </plugin>
+        <plugin>
           <groupId>org.sonatype.central</groupId>
           <artifactId>central-publishing-maven-plugin</artifactId>
           <version>0.6.0</version>
@@ -269,7 +273,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <executions>
           <execution>
@@ -281,6 +284,19 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>integration-tests</id>
+                    <goals>
+                        <goal>integration-test</goal>
+                        <goal>verify</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
 
