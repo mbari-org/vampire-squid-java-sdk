@@ -9,6 +9,8 @@ import com.microsoft.kiota.serialization.JsonParseNodeFactory;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.Authorization;
@@ -27,7 +29,7 @@ public class VampireSquidAccessTokenProvider implements AccessTokenProvider {
     // https://github.com/microsoft/kiota-java/blob/main/components/abstractions/src/main/java/com/microsoft/kiota/authentication/AccessTokenProvider.java#L10
 
 
-    private static final System.Logger logger = System.getLogger(VampireSquidAccessTokenProvider.class.getName());
+    private static final System.Logger log = System.getLogger(VampireSquidAccessTokenProvider.class.getName());
     private final AllowedHostsValidator hostValidator;
     private final URI authUrl;
     private final String apiKey;
@@ -59,13 +61,18 @@ public class VampireSquidAccessTokenProvider implements AccessTokenProvider {
     }
 
     public String doTokenRequest(URI uri) throws Exception {
-        var client = new OkHttpClient();
+        var loggingInterceptor = new HttpLoggingInterceptor(s -> log.log(System.Logger.Level.DEBUG, s));
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        var client = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build();
+
         var request = new Request.Builder()
                 .post(RequestBody.create(new byte[0]))
                 .url(uri.toURL())
                 .addHeader("Authorization", "ApiKey " + apiKey)
                 .build();
-        logger.log(System.Logger.Level.DEBUG, "Requesting token from " + uri);
+        log.log(System.Logger.Level.DEBUG, "Requesting token from " + uri);
         try (var response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 // https://github.com/microsoft/kiota-java/blob/main/components/serialization/json/src/test/java/com/microsoft/kiota/serialization/JsonParseNodeTests.java
@@ -84,7 +91,7 @@ public class VampireSquidAccessTokenProvider implements AccessTokenProvider {
                 token = doTokenRequest(authUrl);
                 jwt = JWT.decode(token);
             } catch (Exception e) {
-                logger.log(System.Logger.Level.ERROR, "Failed to authorize", e);
+                log.log(System.Logger.Level.ERROR, "Failed to authorize", e);
                 return "";
             }
         }

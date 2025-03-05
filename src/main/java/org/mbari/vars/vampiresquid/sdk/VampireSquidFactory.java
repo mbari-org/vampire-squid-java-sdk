@@ -25,6 +25,7 @@ public class VampireSquidFactory {
         if (log.isLoggable(System.Logger.Level.DEBUG)) {
             log.log(System.Logger.Level.DEBUG, "Creating new Annosaurus instance with base URL: " + baseUrl);
             var loggingInterceptor = new HttpLoggingInterceptor(s -> log.log(System.Logger.Level.DEBUG, s));
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             loggingInterceptor.redactHeader("Authorization");
             interceptors = Arrays.copyOf(interceptors, interceptors.length + 1);
             interceptors[interceptors.length - 1] = loggingInterceptor;

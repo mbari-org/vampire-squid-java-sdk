@@ -1,19 +1,20 @@
 package org.mbari.vars.vampiresquid;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple App.
  */
-public class SanityCheck {
+public class SanityTest {
 
     /**
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue() {
+    void shouldAnswerWithTrue() {
         assertTrue(true);
     }
 }

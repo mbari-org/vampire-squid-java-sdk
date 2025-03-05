@@ -27,6 +27,7 @@ public class VampireSquidKiotaClient implements MediaService {
 
     public VampireSquidKiotaClient(URI baseUri, String apiKey) {
         this(VampireSquidFactory.create(baseUri.toString(), apiKey));
+
     }
 
     @Override
