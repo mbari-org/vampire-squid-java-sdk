@@ -23,7 +23,7 @@ public class VampireSquidFactory {
         // Set up the request adapter. This is where we configure the HTTP client and add logging if needed
         var interceptors = KiotaClientFactory.createDefaultInterceptors();
         if (log.isLoggable(System.Logger.Level.DEBUG)) {
-            log.log(System.Logger.Level.DEBUG, "Creating new Annosaurus instance with base URL: " + baseUrl);
+            log.log(System.Logger.Level.DEBUG, "Creating new VampireSquid instance with base URL: " + baseUrl);
             var loggingInterceptor = new HttpLoggingInterceptor(s -> log.log(System.Logger.Level.DEBUG, s));
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             loggingInterceptor.redactHeader("Authorization");

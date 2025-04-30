@@ -29,7 +29,7 @@
   <scm>
     <connection>scm:git:git@github.com:mbari-org/vampire-squid-java-sdk.git</connection>
     <developerConnection>scm:git:ssh://github.com:mbari-org/vampire-squid-java-sdk.git</developerConnection>
-    <url>https://github.com/mbari-org/annosaurus-java-sdk/tree/main</url>
+    <url>https://github.com/mbari-org/vampire-squid-java-sdk/tree/main</url>
   </scm>
 
   <properties>
