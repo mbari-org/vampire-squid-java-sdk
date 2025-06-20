@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.mbari.vars.vampiresquid.sdk.kiota.VampireSquid;
 
+import com.microsoft.kiota.authentication.AnonymousAuthenticationProvider;
 import com.microsoft.kiota.authentication.BaseBearerTokenAuthenticationProvider;
 import com.microsoft.kiota.http.KiotaClientFactory;
 import com.microsoft.kiota.http.OkHttpRequestAdapter;
@@ -36,6 +37,28 @@ public class VampireSquidFactory {
 
         // Create the Annosaurus instance
         return new VampireSquid(adapter);
+    }
+
+    public static VampireSquid create(String baseUrl) {
+
+        // NO authentication needed if we are doing read-only operations
+        var authProvider = new AnonymousAuthenticationProvider();
+        // Set up the request adapter. This is where we configure the HTTP client and add logging if needed
+        var interceptors = KiotaClientFactory.createDefaultInterceptors();
+        if (log.isLoggable(System.Logger.Level.DEBUG)) {
+            log.log(System.Logger.Level.DEBUG, "Creating new Oni instance with base URL: " + baseUrl);
+            var loggingInterceptor = new HttpLoggingInterceptor(s -> log.log(System.Logger.Level.DEBUG, s));
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            interceptors = Arrays.copyOf(interceptors, interceptors.length + 1);
+            interceptors[interceptors.length - 1] = loggingInterceptor;
+        }
+        var client = KiotaClientFactory.create(interceptors).build();
+        var adapter = new OkHttpRequestAdapter(authProvider, null, null, client);
+        adapter.setBaseUrl(baseUrl);
+
+        // Create the Annosaurus instance
+        return new VampireSquid(adapter);
+
     }
     
 }
