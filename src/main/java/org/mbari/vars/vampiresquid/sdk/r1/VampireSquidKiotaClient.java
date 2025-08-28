@@ -6,10 +6,12 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 
 import org.mbari.vars.vampiresquid.sdk.VampireSquidFactory;
 import org.mbari.vars.vampiresquid.sdk.kiota.VampireSquid;
@@ -28,7 +30,6 @@ public class VampireSquidKiotaClient implements MediaService {
 
     public VampireSquidKiotaClient(URI baseUri, String apiKey) {
         this(VampireSquidFactory.create(baseUri.toString(), apiKey));
-
     }
 
     public VampireSquidKiotaClient(URI baseUri) {
@@ -39,8 +40,8 @@ public class VampireSquidKiotaClient implements MediaService {
     public CompletableFuture<Media> create(Media media) {
         return CompletableFuture.supplyAsync(() -> {
             var response = vampireSquid.v1()
-                .media()
-                .post(media.toKiota());
+                    .media()
+                    .post(media.toKiota());
 
             return Media.fromKiota(response);
         }, executor);
@@ -48,8 +49,8 @@ public class VampireSquidKiotaClient implements MediaService {
 
     @Override
     public CompletableFuture<Media> create(String videoSequenceName, String cameraId, String videoName, URI uri,
-            Instant startTimestamp) {
-        
+                                           Instant startTimestamp) {
+
         var kMedia = new org.mbari.vars.vampiresquid.sdk.kiota.models.Media();
         kMedia.setVideoSequenceName(videoSequenceName);
         kMedia.setCameraId(cameraId);
@@ -62,8 +63,8 @@ public class VampireSquidKiotaClient implements MediaService {
 
         return CompletableFuture.supplyAsync(() -> {
             var response = vampireSquid.v1()
-                .media()
-                .post(kMedia);
+                    .media()
+                    .post(kMedia);
 
             return Media.fromKiota(response);
         }, executor);
@@ -79,9 +80,9 @@ public class VampireSquidKiotaClient implements MediaService {
         // TODO Auto-generated method stub
         return CompletableFuture.supplyAsync(() -> {
             var response = vampireSquid.v1()
-                .media()
-                .byVideoReferenceUuid(videoReferenceUuid)
-                .put(kMedia);
+                    .media()
+                    .byVideoReferenceUuid(videoReferenceUuid)
+                    .put(kMedia);
 
             return Media.fromKiota(response);
         }, executor);
@@ -92,22 +93,22 @@ public class VampireSquidKiotaClient implements MediaService {
         var kMedia = media.toKiota();
         return CompletableFuture.supplyAsync(() -> {
             var response = vampireSquid.v1()
-                .media()
-                .byVideoReferenceUuid(media.getVideoReferenceUuid())
-                .put(kMedia);
+                    .media()
+                    .byVideoReferenceUuid(media.getVideoReferenceUuid())
+                    .put(kMedia);
 
             return Media.fromKiota(response);
         }, executor);
-    
+
     }
 
     @Override
     public CompletableFuture<Boolean> delete(UUID videoReferenceUuid) {
         return CompletableFuture.supplyAsync(() -> {
             vampireSquid.v1()
-                .videoreferences()
-                .byUuid(videoReferenceUuid)
-                .delete();
+                    .videoreferences()
+                    .byUuid(videoReferenceUuid)
+                    .delete();
 
             return true;
         }, executor);
@@ -115,257 +116,259 @@ public class VampireSquidKiotaClient implements MediaService {
 
     @Override
     public CompletableFuture<Media> findByUuid(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .videoreference()
-                .byVideoReferenceUuid(uuid)
-                .get();
-
-            return Media.fromKiota(response);
-        }, executor);
-        
+        return findOneOrNull(() ->
+                vampireSquid.v1()
+                        .media()
+                        .videoreference()
+                        .byVideoReferenceUuid(uuid)
+                        .get())
+                .thenApply(Media::fromKiota);
     }
 
     @Override
     public CompletableFuture<Media> findBySha512(byte[] sha512) {
         var hexSha256 = HexFormat.of().formatHex(sha512);
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .sha512()
-                .bySha512(hexSha256)
-                .get();
-
-            return Media.fromKiota(response);
-        }, executor);
-        
+        return findOneOrNull(() ->
+                vampireSquid.v1()
+                        .media()
+                        .sha512()
+                        .bySha512(hexSha256)
+                        .get()
+        ).thenApply(Media::fromKiota);
     }
 
     @Override
     public CompletableFuture<Media> findByUri(URI uri) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                var response = vampireSquid.v1()
+        return findOneOrNull(() ->
+                vampireSquid.v1()
                         .media()
                         .uri()
                         .byUri(uri.toString())
-                        .get();
+                        .get()
+        ).thenApply(Media::fromKiota);
 
-                return Media.fromKiota(response);
-            }
-            catch (NotFound e) {
-                return null;
-            }
-            catch (Exception e) {
-                throw e;
-            }
-        }, executor);
     }
-    
+
     @Override
     public CompletableFuture<List<Media>> findByVideoSequenceName(String videoSequenceName) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .videosequence()
-                .byName(videoSequenceName)
-                .get();
-
-            return response.stream()
+        return findMany(() ->
+                vampireSquid.v1()
+                        .media()
+                        .videosequence()
+                        .byName(videoSequenceName)
+                        .get()
+        ).thenApply(list -> list.stream()
                 .map(Media::fromKiota)
-                .toList();
-        }, executor);
-        
+                .toList());
+
     }
 
     @Override
     public CompletableFuture<List<Media>> findByVideoName(String videoName) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .video()
-                .byName(videoName)
-                .get();
+        return findMany(() ->
+                vampireSquid.v1()
+                        .media()
+                        .video()
+                        .byName(videoName)
+                        .get()
 
-            return response.stream()
+        ).thenApply(list -> list.stream()
                 .map(Media::fromKiota)
-                .toList();
-        }, executor);
-        
+                .toList());
+
     }
 
     @Override
     public CompletableFuture<List<String>> findAllVideoSequenceNames() {
-        return CompletableFuture.supplyAsync(() -> {
-            return vampireSquid.v1()
-                .videosequences()
-                .names()
-                .get();
-
-        }, executor);
-        
+        return findMany(() ->
+                vampireSquid.v1()
+                        .videosequences()
+                        .names()
+                        .get());
     }
+
 
     @Override
     public CompletableFuture<List<Media>> findByCameraIdAndTimestamp(String cameraId, Instant timestamp) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .camera()
-                .byCameraId(cameraId)
-                .byDatetimeId(timestamp.toString())
-                .get();
-
-            return response.stream()
+        return findMany(() ->
+                vampireSquid.v1()
+                        .media()
+                        .camera()
+                        .byCameraId(cameraId)
+                        .byDatetimeId(timestamp.toString())
+                        .get()
+        ).thenApply(list -> list.stream()
                 .map(Media::fromKiota)
-                .toList();
-        }, executor);
+                .toList());
     }
 
     @Override
     public CompletableFuture<List<Media>> findByCameraIdAndDate(String cameraId, Instant startTimestamp,
-            Instant endTimestamp) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .camera()
-                .byCameraId(cameraId)
-                .byDatetimeId(startTimestamp.toString())
-                .byEndTimestamp(endTimestamp.toString())
-                .get();
-
-            return response.stream()
+                                                                Instant endTimestamp) {
+        return findMany(() ->
+                vampireSquid.v1()
+                        .media()
+                        .camera()
+                        .byCameraId(cameraId)
+                        .byDatetimeId(startTimestamp.toString())
+                        .byEndTimestamp(endTimestamp.toString())
+                        .get()
+        ).thenApply(list -> list.stream()
                 .map(Media::fromKiota)
-                .toList();
-        }, executor);
+                .toList());
     }
 
     @Override
     public CompletableFuture<List<Media>> findByVideoSequenceNameAndTimestamp(String videoSequenceName,
-            Instant timestamp) {
+                                                                              Instant timestamp) {
         throw new UnsupportedOperationException("Not implemented. We haven't used this yet");
     }
 
     @Override
     public CompletableFuture<List<String>> findAllCameraIds() {
-        return CompletableFuture.supplyAsync(() -> {
-            return vampireSquid.v1()
-                .videosequences()
-                .cameras()
-                .get();
-        }, executor);
+        return findMany(() ->
+                vampireSquid.v1()
+                        .videosequences()
+                        .cameras()
+                        .get()
+        );
     }
 
     @Override
     public CompletableFuture<List<URI>> findAllURIs() {
-        return CompletableFuture.supplyAsync(() -> {
-            var uriStrings = vampireSquid.v1()
-                .videoreferences()
-                .uris()
-                .get();
-
-            return uriStrings.stream()
-                .map(URI::create)
-                .toList();
-        }, executor);
+        return findMany(() ->
+                vampireSquid.v1()
+                        .videoreferences()
+                        .uris()
+                        .get()
+        ).thenApply(uriStrings ->
+                uriStrings.stream()
+                        .map(URI::create)
+                        .toList()
+        );
     }
 
     @Override
     public CompletableFuture<List<Media>> findConcurrentByVideoReferenceUuid(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .concurrent()
-                .byVideoReferenceUuid(uuid)
-                .get();
+        return findMany(() ->
+                vampireSquid.v1()
+                        .media()
+                        .concurrent()
+                        .byVideoReferenceUuid(uuid)
+                        .get()
+        ).thenApply(response ->
+                response.stream()
+                        .map(Media::fromKiota)
+                        .toList()
+        );
 
-            return response.stream()
-                .map(Media::fromKiota)
-                .toList();
-        }, executor);
-        
     }
 
     @Override
     public CompletableFuture<List<Media>> findByFilename(String filename) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .videoreference()
-                .filename()
-                .byFilename(filename)
-                .get();
-
-            return response.stream()
-                .map(Media::fromKiota)
-                .toList();
-        }, executor);
+        return findMany(() ->
+                vampireSquid.v1()
+                        .media()
+                        .videoreference()
+                        .filename()
+                        .byFilename(filename)
+                        .get()
+        ).thenApply(response ->
+                response.stream()
+                        .map(Media::fromKiota)
+                        .toList()
+        );
     }
 
     @Override
     public CompletableFuture<LastUpdate> findLastVideoSequenceUpdate(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .videosequences()
-                .lastupdate()
-                .byUuid(uuid)
-                .get();
+        return findOne(() ->
+                vampireSquid.v1()
+                        .videosequences()
+                        .lastupdate()
+                        .byUuid(uuid)
+                        .get()
+        ).thenApply(response ->
+                response.map(LastUpdate::fromKiota).orElse(null)
+        );
 
-            return LastUpdate.fromKiota(response);
-        }, executor);
-        
     }
 
     @Override
     public CompletableFuture<LastUpdate> findLastVideoUpdate(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .videos()
-                .lastupdate()
-                .byUuid(uuid)
-                .get();
-
-            return LastUpdate.fromKiota(response);
-        }, executor);
+        return findOne(() ->
+                vampireSquid.v1()
+                        .videos()
+                        .lastupdate()
+                        .byUuid(uuid)
+                        .get()
+        ).thenApply(response ->
+                response.map(LastUpdate::fromKiota).orElse(null)
+        );
     }
 
     @Override
     public CompletableFuture<LastUpdate> findLastVideoReferenceUpdate(UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .videoreferences()
-                .lastupdate()
-                .byUuid(uuid)
-                .get();
-
-            return LastUpdate.fromKiota(response);
-        }, executor);
+        return findOne(() ->
+                vampireSquid.v1()
+                        .videoreferences()
+                        .lastupdate()
+                        .byUuid(uuid)
+                        .get()
+        ).thenApply(response ->
+                response.map(LastUpdate::fromKiota).orElse(null)
+        );
     }
 
     @Override
     public CompletableFuture<List<String>> findVideoSequenceNamesByCameraId(String cameraId) {
-        return CompletableFuture.supplyAsync(() -> {
-            return vampireSquid.v1()
-                .videosequences()
-                .names()
-                .camera()
-                .byCameraid(cameraId)
-                .get();
-        }, executor);
+        return findMany(() ->
+                vampireSquid.v1()
+                        .videosequences()
+                        .names()
+                        .camera()
+                        .byCameraid(cameraId)
+                        .get()
+        );
     }
 
     @Override
     public CompletableFuture<List<String>> findVideoNamesByVideoSequenceName(String videoSequenceName) {
-        return CompletableFuture.supplyAsync(() -> {
-            return vampireSquid.v1()
-                .videos()
-                .names()
-                .videosequence()
-                .byVideoSequenceName(videoSequenceName)
-                .get();
-        }, executor);
-        
+        return findMany(() ->
+                vampireSquid.v1()
+                        .videos()
+                        .names()
+                        .videosequence()
+                        .byVideoSequenceName(videoSequenceName)
+                        .get()
+        );
+
     }
-    
+
+
+    private <A> CompletableFuture<Optional<A>> findOne(Supplier<A> supplier) {
+        return findOneOrNull(supplier).thenApply(Optional::ofNullable);
+    }
+
+    private <A> CompletableFuture<A> findOneOrNull(Supplier<A> supplier) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return supplier.get();
+            } catch (NotFound e) {
+                return null;
+            }
+        }, executor);
+    }
+
+    private <A> CompletableFuture<List<A>> findMany(Supplier<List<A>> supplier) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return supplier.get();
+            } catch (NotFound e) {
+                return List.of();
+            }
+        }, executor);
+    }
+
+
 }

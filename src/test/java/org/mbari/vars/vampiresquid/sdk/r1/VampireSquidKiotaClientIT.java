@@ -41,4 +41,20 @@ public class VampireSquidKiotaClientIT {
         assertEquals(uri, camera.getUri());
     }
 
+    @Test
+    public void testFindByFilename_NotFound() {
+        var client = new VampireSquidKiotaClient(URI.create("https://gehenna.shore.mbari.org/vam"));
+        var camera = client.findByFilename("nonexistent.mp4").join();
+        assertNotNull(camera);
+        assertTrue(camera.isEmpty());
+    }
+
+    @Test
+    public void testFindByFilename() {
+        var client = new VampireSquidKiotaClient(URI.create("https://gehenna.shore.mbari.org/vam"));
+        var camera = client.findByFilename("D1234_20191216T143703Z_h264.mp4").join();
+        assertNotNull(camera);
+        assertFalse(camera.isEmpty());
+    }
+
 }
