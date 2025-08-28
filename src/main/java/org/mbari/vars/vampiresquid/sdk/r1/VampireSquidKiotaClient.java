@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 
 import org.mbari.vars.vampiresquid.sdk.VampireSquidFactory;
 import org.mbari.vars.vampiresquid.sdk.kiota.VampireSquid;
+import org.mbari.vars.vampiresquid.sdk.kiota.models.NotFound;
 import org.mbari.vars.vampiresquid.sdk.r1.models.LastUpdate;
 import org.mbari.vars.vampiresquid.sdk.r1.models.Media;
 
@@ -144,16 +145,24 @@ public class VampireSquidKiotaClient implements MediaService {
     @Override
     public CompletableFuture<Media> findByUri(URI uri) {
         return CompletableFuture.supplyAsync(() -> {
-            var response = vampireSquid.v1()
-                .media()
-                .uri()
-                .byUri(uri.toString())
-                .get();
+            try {
+                var response = vampireSquid.v1()
+                        .media()
+                        .uri()
+                        .byUri(uri.toString())
+                        .get();
 
-            return Media.fromKiota(response);
+                return Media.fromKiota(response);
+            }
+            catch (NotFound e) {
+                return null;
+            }
+            catch (Exception e) {
+                throw e;
+            }
         }, executor);
     }
-
+    
     @Override
     public CompletableFuture<List<Media>> findByVideoSequenceName(String videoSequenceName) {
         return CompletableFuture.supplyAsync(() -> {
