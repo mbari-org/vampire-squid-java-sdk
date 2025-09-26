@@ -57,4 +57,12 @@ public class VampireSquidKiotaClientIT {
         assertFalse(camera.isEmpty());
     }
 
+    @Test
+    public void testListVideoSequences() {
+        var client = new VampireSquidKiotaClient(URI.create("https://gehenna.shore.mbari.org/vam"));
+        var seqs = client.listVideoSequences(1, 10).join();
+        assertNotNull(seqs);
+        assertFalse(seqs.isEmpty());
+    }
+
 }
