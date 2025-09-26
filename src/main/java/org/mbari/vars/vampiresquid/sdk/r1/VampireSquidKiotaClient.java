@@ -162,7 +162,7 @@ public class VampireSquidKiotaClient implements MediaService {
             }
         }, executor);
     }
-    
+
     @Override
     public CompletableFuture<List<Media>> findByVideoSequenceName(String videoSequenceName) {
         return CompletableFuture.supplyAsync(() -> {
@@ -366,6 +366,33 @@ public class VampireSquidKiotaClient implements MediaService {
                 .get();
         }, executor);
         
+    }
+
+    /**
+     * Lists video sequences with pagination. Be aware that the pagination is for the video sequences, not the media.
+     * So if a video sequence has many media items, they will all be returned in the response.
+     * 
+     * @param pageNumber The page number (1-based) 
+     * @param pageSize The number of items per page
+     * @return A CompletableFuture containing a list of Media objects representing all media in a video sequences
+     */
+    @Override
+    public CompletableFuture<List<Media>> listVideoSequences(int pageNumber, int pageSize) {
+        var limit = pageSize;
+        var offset = (pageNumber - 1) * pageSize;
+        return CompletableFuture.supplyAsync(() -> {
+            var response = vampireSquid.v1()
+                .videosequences()
+                .get(requestConfig -> {
+                    requestConfig.queryParameters.limit = limit;
+                    requestConfig.queryParameters.offset = offset;
+                });
+
+            return response.stream()
+                    .flatMap(xs -> Media.fromKiota(xs).stream())
+                    .toList();
+            
+        }, executor);
     }
     
 }

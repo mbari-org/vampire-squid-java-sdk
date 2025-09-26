@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import org.mbari.vars.vampiresquid.sdk.kiota.models.VideoSequence;
 import org.mbari.vars.vampiresquid.sdk.r1.models.LastUpdate;
 import org.mbari.vars.vampiresquid.sdk.r1.models.Media;
 
@@ -75,5 +76,7 @@ public interface MediaService {
     CompletableFuture<List<String>> findVideoSequenceNamesByCameraId(String cameraId);
 
     CompletableFuture<List<String>> findVideoNamesByVideoSequenceName(String videoSequenceName);
+
+    CompletableFuture<List<Media>> listVideoSequences(int pageNumber, int pageSize);
 
 }

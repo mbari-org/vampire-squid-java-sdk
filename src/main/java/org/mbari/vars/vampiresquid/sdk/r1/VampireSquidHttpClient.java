@@ -199,5 +199,10 @@ public class VampireSquidHttpClient extends BaseHttpClient implements MediaServi
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findVideoNamesByVideoSequenceName'");
     }
+
+    @Override
+    public CompletableFuture<List<Media>> listVideoSequences(int pageNumber, int pageSize) {
+        throw new UnsupportedOperationException("Unimplemented method 'listVideoSequences'");
+    }
     
 }

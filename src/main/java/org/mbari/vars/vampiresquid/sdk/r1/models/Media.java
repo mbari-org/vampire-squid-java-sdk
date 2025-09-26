@@ -4,8 +4,10 @@ import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -306,6 +308,46 @@ public class Media {
         media.setVideoSequenceName(kMedia.getVideoSequenceName());
         media.setWidth(kMedia.getWidth());
         return media;
+    }
+
+    public static List<Media> fromKiota(org.mbari.vars.vampiresquid.sdk.kiota.models.VideoSequence kVideoSequence) {
+        var medias = new ArrayList<Media>();
+        for (var video : Optional.ofNullable(kVideoSequence.getVideos()).orElseGet(java.util.Collections::emptyList)) {
+            for (var videoReference : Optional.ofNullable(video.getVideoReferences()).orElseGet(java.util.Collections::emptyList)) {
+                var media = new Media();
+                media.setVideoReferenceUuid(videoReference.getUuid());
+                media.setVideoUuid(video.getUuid());
+                media.setVideoSequenceUuid(kVideoSequence.getUuid());
+                media.setCameraId(kVideoSequence.getCameraId());
+                media.setContainer(videoReference.getContainer());
+                media.setDescription(videoReference.getDescription());
+                if (video.getDurationMillis() != null) {
+                    media.setDuration(Duration.ofMillis(video.getDurationMillis()));
+                }
+                media.setFrameRate(videoReference.getFrameRate());
+                media.setHeight(videoReference.getHeight());
+                if (videoReference.getSha512() != null) {
+                    var hexFormat = HexFormat.of();
+                    var sha512 = hexFormat.parseHex(videoReference.getSha512());
+                    media.setSha512(sha512);    
+                }
+                media.setSizeBytes(videoReference.getSizeBytes());
+                if (video.getStartTimestamp() != null) {
+                    media.setStartTimestamp(video.getStartTimestamp().toInstant());
+                }
+                if (videoReference.getUri() != null) {
+                    media.setUri(URI.create(videoReference.getUri()));
+                }
+                media.setVideoCodec(videoReference.getVideoCodec());
+                media.setVideoDescription(video.getDescription());
+                media.setVideoName(video.getName());
+                media.setVideoSequenceDescription(kVideoSequence.getDescription());
+                media.setVideoSequenceName(kVideoSequence.getName());
+                media.setWidth(videoReference.getWidth());
+                medias.add(media);
+            }
+        }
+        return medias;
     }
 
 
