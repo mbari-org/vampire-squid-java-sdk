@@ -396,6 +396,6 @@ public class VampireSquidKiotaClient implements MediaService {
 
         });
     }
-    
+
 
 }
