@@ -13,6 +13,7 @@ import org.mbari.vars.vampiresquid.sdk.r1.models.LastUpdate;
 import org.mbari.vars.vampiresquid.sdk.r1.models.Media;
 
 /**
+ * Media service interface
  * @author Brian Schlining
  * @since 2017-05-11T15:42:00
  */

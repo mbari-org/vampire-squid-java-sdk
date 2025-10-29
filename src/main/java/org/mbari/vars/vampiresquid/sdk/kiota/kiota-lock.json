@@ -1,14 +1,14 @@
 {
-  "descriptionHash": "10EB0C53FCFF7B8AC32D20A7EE9D0AA5BDE495FFD3D6913DDE7A88555507A4EDDD348986851D9636BEAD14859E78EE236F52527CC997381256DAE78373D7F6D0",
+  "descriptionHash": "E56B15A609FE317710225046EA95288DF23143B649776E02A29670BC2D7230A47C537D13107F85441252FAE74F2F1064B14C31FE1A63878BB2F613B9EAE02FDE",
   "descriptionLocation": "../../../../../../../resources/docs.yaml",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.22.3",
+  "kiotaVersion": "1.29.0",
   "clientClassName": "VampireSquid",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "org.mbari.vars.vampiresquid.sdk.kiota",
   "language": "Java",
   "usesBackingStore": false,
-  "excludeBackwardCompatible": false,
+  "excludeBackwardCompatible": true,
   "includeAdditionalData": true,
   "disableSSLValidation": false,
   "serializers": [

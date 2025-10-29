@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 
 /**
+ * Gson converter for java.time.Duration
  * @author Brian Schlining
  * @since 2016-07-11T15:57:00
  */

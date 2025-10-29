@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: vampire-squid
-  version: 1.0.8
+  version: 1.2.2
 paths:
   /v1/auth:
     post:
@@ -877,6 +877,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerError'
+  /v1/videosequences/names/empty:
+    get:
+      tags:
+      - video sequences
+      description: Find all video sequence that do not contain any video references.
+      operationId: findEmptyVideoSequenceNames
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
   /v1/videosequences/names:
     get:
       tags:
@@ -1565,7 +1598,10 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: string
+              $ref: '#/components/schemas/VideoUpdate'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoUpdate'
         required: true
       responses:
         '200':
@@ -2372,6 +2408,26 @@ components:
           type: string
         camera_id:
           type: string
+        description:
+          type: string
+    VideoUpdate:
+      title: VideoUpdate
+      type: object
+      properties:
+        name:
+          type: string
+        video_sequence_uuid:
+          type: string
+          format: uuid
+        start:
+          type: string
+          format: date-time
+        start_timestamp:
+          type: string
+          format: date-time
+        duration_millis:
+          type: integer
+          format: int64
         description:
           type: string
   securitySchemes:

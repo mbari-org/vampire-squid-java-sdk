@@ -16,6 +16,7 @@ import org.mbari.vars.vampiresquid.sdk.kiota.models.BadRequest;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.NotFound;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.ServerError;
 import org.mbari.vars.vampiresquid.sdk.kiota.v1.videosequences.names.camera.CameraRequestBuilder;
+import org.mbari.vars.vampiresquid.sdk.kiota.v1.videosequences.names.empty.EmptyRequestBuilder;
 /**
  * Builds and executes requests for operations under /v1/videosequences/names
  */
@@ -28,6 +29,14 @@ public class NamesRequestBuilder extends BaseRequestBuilder {
     @jakarta.annotation.Nonnull
     public CameraRequestBuilder camera() {
         return new CameraRequestBuilder(pathParameters, requestAdapter);
+    }
+    /**
+     * The empty property
+     * @return a {@link EmptyRequestBuilder}
+     */
+    @jakarta.annotation.Nonnull
+    public EmptyRequestBuilder empty() {
+        return new EmptyRequestBuilder(pathParameters, requestAdapter);
     }
     /**
      * Instantiates a new {@link NamesRequestBuilder} and sets the default values.

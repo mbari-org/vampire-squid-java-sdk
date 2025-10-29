@@ -17,6 +17,7 @@ import org.mbari.vars.vampiresquid.sdk.kiota.models.NotFound;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.ServerError;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.Unauthorized;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.Video;
+import org.mbari.vars.vampiresquid.sdk.kiota.models.VideoUpdate;
 /**
  * Builds and executes requests for operations under /v1/videos/{uuid}
  */
@@ -103,7 +104,7 @@ public class WithUuItemRequestBuilder extends BaseRequestBuilder {
      * @throws ServerError When receiving a 500 status code
      */
     @jakarta.annotation.Nullable
-    public Video put(@jakarta.annotation.Nonnull final String body) {
+    public Video put(@jakarta.annotation.Nonnull final VideoUpdate body) {
         return put(body, null);
     }
     /**
@@ -117,7 +118,7 @@ public class WithUuItemRequestBuilder extends BaseRequestBuilder {
      * @throws ServerError When receiving a 500 status code
      */
     @jakarta.annotation.Nullable
-    public Video put(@jakarta.annotation.Nonnull final String body, @jakarta.annotation.Nullable final java.util.function.Consumer<PutRequestConfiguration> requestConfiguration) {
+    public Video put(@jakarta.annotation.Nonnull final VideoUpdate body, @jakarta.annotation.Nullable final java.util.function.Consumer<PutRequestConfiguration> requestConfiguration) {
         Objects.requireNonNull(body);
         final RequestInformation requestInfo = toPutRequestInformation(body, requestConfiguration);
         final HashMap<String, ParsableFactory<? extends Parsable>> errorMapping = new HashMap<String, ParsableFactory<? extends Parsable>>();
@@ -173,7 +174,7 @@ public class WithUuItemRequestBuilder extends BaseRequestBuilder {
      * @return a {@link RequestInformation}
      */
     @jakarta.annotation.Nonnull
-    public RequestInformation toPutRequestInformation(@jakarta.annotation.Nonnull final String body) {
+    public RequestInformation toPutRequestInformation(@jakarta.annotation.Nonnull final VideoUpdate body) {
         return toPutRequestInformation(body, null);
     }
     /**
@@ -183,12 +184,12 @@ public class WithUuItemRequestBuilder extends BaseRequestBuilder {
      * @return a {@link RequestInformation}
      */
     @jakarta.annotation.Nonnull
-    public RequestInformation toPutRequestInformation(@jakarta.annotation.Nonnull final String body, @jakarta.annotation.Nullable final java.util.function.Consumer<PutRequestConfiguration> requestConfiguration) {
+    public RequestInformation toPutRequestInformation(@jakarta.annotation.Nonnull final VideoUpdate body, @jakarta.annotation.Nullable final java.util.function.Consumer<PutRequestConfiguration> requestConfiguration) {
         Objects.requireNonNull(body);
         final RequestInformation requestInfo = new RequestInformation(HttpMethod.PUT, urlTemplate, pathParameters);
         requestInfo.configure(requestConfiguration, PutRequestConfiguration::new);
         requestInfo.headers.tryAdd("Accept", "application/json");
-        requestInfo.setContentFromScalar(requestAdapter, "application/x-www-form-urlencoded", body);
+        requestInfo.setContentFromParsable(requestAdapter, "application/json", body);
         return requestInfo;
     }
     /**

@@ -38,5 +38,5 @@ List<String> cameraIds = mediaService.findAllCameraIds();
 3. Run the following command in the project's root directory
 
 ```shell
-kiota generate -l java -c VampireSquid -n org.mbari.vars.vampiresquid.sdk.kiota -d src/main/resources/docs.yaml -o ./src/main/java/org/mbari/vars/vampiresquid/sdk/kiota
+kiota generate -l java -c VampireSquid -n org.mbari.vars.vampiresquid.sdk.kiota -d src/main/resources/docs.yaml -o ./src/main/java/org/mbari/vars/vampiresquid/sdk/kiota --exclude-backward-compatible
 ```

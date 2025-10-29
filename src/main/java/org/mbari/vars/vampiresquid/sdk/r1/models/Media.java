@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
+ * Media model class
  * @author Brian Schlining
  * @since 2017-05-11T13:27:00
  */
@@ -252,12 +253,7 @@ public class Media {
         if (durationMillis != null) kMedia.setDurationMillis(durationMillis.toMillis());
         kMedia.setFrameRate(frameRate);
         kMedia.setHeight(height);
-        kMedia.setSha512(audioCodec);
-        if (sha512 != null) {
-            var hexFormat = HexFormat.of();
-            var hexSha256 = hexFormat.formatHex(sha512);
-            kMedia.setSha512(hexSha256);
-        }
+        kMedia.setSha512(sha512);
         kMedia.setSizeBytes(sizeBytes);
         if (startTimestamp != null) {
             var offsetTimestamp = startTimestamp.atOffset(ZoneOffset.UTC);
@@ -292,11 +288,12 @@ public class Media {
         }
         media.setFrameRate(kMedia.getFrameRate());
         media.setHeight(kMedia.getHeight());
-        if (kMedia.getSha512() != null) {
-            var hexFormat = HexFormat.of();
-            var sha512 = hexFormat.parseHex(kMedia.getSha512());
-            media.setSha512(sha512);
-        }
+        media.setSha512(kMedia.getSha512());
+        // if (kMedia.getSha512() != null) {
+        //     var hexFormat = HexFormat.of();
+        //     var sha512 = hexFormat.parseHex(kMedia.getSha512());
+        //     media.setSha512(sha512);
+        // }
         media.setSizeBytes(kMedia.getSizeBytes());
         if (kMedia.getStartTimestamp() != null) {
             media.setStartTimestamp(kMedia.getStartTimestamp().toInstant());
@@ -329,11 +326,12 @@ public class Media {
                 }
                 media.setFrameRate(videoReference.getFrameRate());
                 media.setHeight(videoReference.getHeight());
-                if (videoReference.getSha512() != null) {
-                    var hexFormat = HexFormat.of();
-                    var sha512 = hexFormat.parseHex(videoReference.getSha512());
-                    media.setSha512(sha512);    
-                }
+                media.setSha512(videoReference.getSha512());
+                // if (videoReference.getSha512() != null) {
+                //     var hexFormat = HexFormat.of();
+                //     var sha512 = hexFormat.parseHex(videoReference.getSha512());
+                //     media.setSha512(sha512);    
+                // }
                 media.setSizeBytes(videoReference.getSizeBytes());
                 if (video.getStartTimestamp() != null) {
                     media.setStartTimestamp(video.getStartTimestamp().toInstant());

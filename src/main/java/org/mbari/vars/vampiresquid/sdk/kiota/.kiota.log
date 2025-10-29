@@ -1,4 +1,4 @@
 Warning: KiotaBuilder OpenAPI warning: #/ - A servers entry (v3) or host + basePath + schemes properties (v2) was not present in the OpenAPI description. The root URL will need to be set manually with the request adapter.
-Warning: KiotaBuilder OpenAPI warning: #/paths/~1v1~1videos/post - The operation createOneVideo has a request body which is not an object type. This is not supported by Kiota and serialization will fail.
-Warning: KiotaBuilder OpenAPI warning: #/paths/~1v1~1videos~1{uuid}/put - The operation updateVideo has a request body which is not an object type. This is not supported by Kiota and serialization will fail.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1v1~1videos/post - The operation #/paths/~1v1~1videos/post has a request body which is not an object type. This is not supported by Kiota and serialization will fail.
 Warning: KiotaBuilder No server url found in the OpenAPI document. The base url will need to be set when using the client.
+Warning: KiotaBuilder API client was generated with version 1.22.3 and the current version is 1.29.0, it will be upgraded and you should upgrade dependencies

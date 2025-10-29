@@ -37,7 +37,7 @@ public class VideoReferenceUpdate implements AdditionalDataHolder, Parsable {
     /**
      * The sha512 property
      */
-    private String sha512;
+    private byte[] sha512;
     /**
      * The size_bytes property
      */
@@ -118,7 +118,7 @@ public class VideoReferenceUpdate implements AdditionalDataHolder, Parsable {
         deserializerMap.put("description", (n) -> { this.setDescription(n.getStringValue()); });
         deserializerMap.put("frame_rate", (n) -> { this.setFrameRate(n.getDoubleValue()); });
         deserializerMap.put("height", (n) -> { this.setHeight(n.getIntegerValue()); });
-        deserializerMap.put("sha512", (n) -> { this.setSha512(n.getStringValue()); });
+        deserializerMap.put("sha512", (n) -> { this.setSha512(n.getByteArrayValue()); });
         deserializerMap.put("size_bytes", (n) -> { this.setSizeBytes(n.getLongValue()); });
         deserializerMap.put("uri", (n) -> { this.setUri(n.getStringValue()); });
         deserializerMap.put("video_codec", (n) -> { this.setVideoCodec(n.getStringValue()); });
@@ -144,10 +144,10 @@ public class VideoReferenceUpdate implements AdditionalDataHolder, Parsable {
     }
     /**
      * Gets the sha512 property value. The sha512 property
-     * @return a {@link String}
+     * @return a {@link byte[]}
      */
     @jakarta.annotation.Nullable
-    public String getSha512() {
+    public byte[] getSha512() {
         return this.sha512;
     }
     /**
@@ -201,7 +201,7 @@ public class VideoReferenceUpdate implements AdditionalDataHolder, Parsable {
         writer.writeStringValue("description", this.getDescription());
         writer.writeDoubleValue("frame_rate", this.getFrameRate());
         writer.writeIntegerValue("height", this.getHeight());
-        writer.writeStringValue("sha512", this.getSha512());
+        writer.writeByteArrayValue("sha512", this.getSha512());
         writer.writeLongValue("size_bytes", this.getSizeBytes());
         writer.writeStringValue("uri", this.getUri());
         writer.writeStringValue("video_codec", this.getVideoCodec());
@@ -255,7 +255,7 @@ public class VideoReferenceUpdate implements AdditionalDataHolder, Parsable {
      * Sets the sha512 property value. The sha512 property
      * @param value Value to set for the sha512 property.
      */
-    public void setSha512(@jakarta.annotation.Nullable final String value) {
+    public void setSha512(@jakarta.annotation.Nullable final byte[] value) {
         this.sha512 = value;
     }
     /**

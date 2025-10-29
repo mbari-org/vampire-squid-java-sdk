@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import org.mbari.vars.vampiresquid.sdk.kiota.models.LastUpdatedTime;
 
 /**
+ * Model class for LastUpdate
  * @author Brian Schlining
  * @since 2019-01-31T14:36:00
  */
