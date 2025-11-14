@@ -35,8 +35,14 @@ List<String> cameraIds = mediaService.findAllCameraIds();
 
 1. Copy the open api yaml file into each project's src/main/resources folder as docs.yaml
 2. Some may need the openapi version changed to 3.0.0 as kiota does not support 3.1.0
-3. Run the following command in the project's root directory
+3. Remove the `format: binary` from all sha512 blocks. Kiota assumes it's base64 encoded but we actually have been encoding as hex. This change will make Kiota treat them as strings:
+```y
+        sha512:
+          type: string
+          #format: binary # kiota will generat
+```
+4. Run the following command in the project's root directory
 
 ```shell
-kiota generate -l java -c VampireSquid -n org.mbari.vars.vampiresquid.sdk.kiota -d src/main/resources/docs.yaml -o ./src/main/java/org/mbari/vars/vampiresquid/sdk/kiota --exclude-backward-compatible
+kiota generate -l java -c VampireSquid -n org.mbari.vars.vampiresquid.sdk.kiota -d ./src/main/resources/docs.yaml -o ./src/main/java/org/mbari/vars/vampiresquid/sdk/kiota --exclude-backward-compatible
 ```
