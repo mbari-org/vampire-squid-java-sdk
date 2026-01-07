@@ -6,7 +6,7 @@
 
   <groupId>org.mbari.vars</groupId>
   <artifactId>vampire-squid-java-sdk</artifactId>
-  <version>0.0.13</version>
+  <version>0.0.14</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Java SDK for the vampire-squid microservice</description>
