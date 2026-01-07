@@ -173,7 +173,7 @@ public class Media implements AdditionalDataHolder, Parsable {
         deserializerMap.put("duration_millis", (n) -> { this.setDurationMillis(n.getLongValue()); });
         deserializerMap.put("frame_rate", (n) -> { this.setFrameRate(n.getDoubleValue()); });
         deserializerMap.put("height", (n) -> { this.setHeight(n.getIntegerValue()); });
-        deserializerMap.put("sha512", (n) -> { this.setSha512(n.getStringValue()); });
+        deserializerMap.put("sha512", (n) -> { this.setSha512(n.getByteArrayValue()); });
         deserializerMap.put("size_bytes", (n) -> { this.setSizeBytes(n.getLongValue()); });
         deserializerMap.put("start_timestamp", (n) -> { this.setStartTimestamp(n.getOffsetDateTimeValue()); });
         deserializerMap.put("uri", (n) -> { this.setUri(n.getStringValue()); });
