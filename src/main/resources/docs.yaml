@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: vampire-squid
   version: 1.2.3
@@ -2175,6 +2175,7 @@ components:
           type: string
         sha512:
           type: string
+          format: binary
     MoveVideoParams:
       title: MoveVideoParams
       type: object
@@ -2287,6 +2288,7 @@ components:
           format: int64
         sha512:
           type: string
+          format: binary
         description:
           type: string
         last_updated_time:
@@ -2324,6 +2326,7 @@ components:
           format: int64
         sha512:
           type: string
+          format: binary
         description:
           type: string
     VideoReferenceUpdate:
@@ -2357,6 +2360,7 @@ components:
           format: int64
         sha512:
           type: string
+          format: binary
         description:
           type: string
     VideoSequence:

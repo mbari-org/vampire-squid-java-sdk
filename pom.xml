@@ -6,7 +6,7 @@
 
   <groupId>org.mbari.vars</groupId>
   <artifactId>vampire-squid-java-sdk</artifactId>
-  <version>0.0.12</version>
+  <version>0.0.14</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Java SDK for the vampire-squid microservice</description>
@@ -37,8 +37,8 @@
     <maven.compiler.release>21</maven.compiler.release>
 
     <auth0.version>4.5.0</auth0.version>
-    <kiota.version>1.8.10</kiota.version>
-    <methanol.version>1.8.4</methanol.version>
+    <kiota.version>1.9.0</kiota.version>
+    <methanol.version>1.9.0</methanol.version>
     <okhttp3.version>4.12.0</okhttp3.version>
   </properties>
 
@@ -270,6 +270,17 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>org.mbari.vars.vampiresquid.sdk</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
 
       <plugin>
