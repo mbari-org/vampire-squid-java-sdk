@@ -36,6 +36,10 @@ public class VampireSquidKiotaClient implements MediaService {
         this(VampireSquidFactory.create(baseUri.toString()));
     }
 
+    public VampireSquid getVampireSquid() {
+        return vampireSquid;
+    }
+
     @Override
     public CompletableFuture<Media> create(Media media) {
         return CompletableFuture.supplyAsync(() -> {
